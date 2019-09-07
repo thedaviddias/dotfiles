@@ -1,0 +1,14 @@
+{
+  "name": "dotfiles",
+  "version": "1.0.0",
+  "description": "My dotfiles for MacOS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-emoji": "^1.10.0"
+  }
+}

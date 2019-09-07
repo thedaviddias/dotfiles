@@ -1,0 +1,103 @@
+#########################################
+# Utility Functions
+
+# Create a new git repo with one README commit and CD into it
+function gitnr() { mkdir $1; cd $1; git init; touch README; git add README; git commit -mFirst-commit;}
+
+# Show normally hidden system and dotfile types of files
+# in Mac OS Finder
+function showhiddenfiles() {
+  defaults write com.apple.Finder AppleShowAllFiles YES
+  osascript -e 'tell application "Finder" to quit'
+  sleep 0.25
+  osascript -e 'tell application "Finder" to activate'
+}
+
+# Hide (back to defaults) normally hidden system and dotfile types of files
+# in Mac OS Finder
+function hidehiddenfiles() {
+  defaults write com.apple.Finder AppleShowAllFiles NO
+  osascript -e 'tell application "Finder" to quit'
+  sleep 0.25
+  osascript -e 'tell application "Finder" to activate'
+}
+
+# Create a new directory and enter it
+function mkd() {
+  mkdir -p "$@" && cd "$_";
+}
+
+# create files in subfolders
+function touchp() {
+  mkdir -p "$(dirname "$1")/" && touch "$1"
+}
+
+## output directory/file tree, excluding ignorables
+function tre(){
+  tree -aC -I '.git|node_modules|bower_components|.DS_Store' --dirsfirst "$@"
+}
+
+# fo [FUZZY PATTERN] - Open the selected file with the default editor
+#   - Bypass fuzzy finder if there's only one match (--select-1)
+#   - Exit if there's no match (--exit-0)
+function fo() {
+  local files
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+}
+
+#lists npm packages installed
+function npmls() {
+    npm ls --depth=0 "$@" 2>/dev/null
+}
+
+#
+# Find a port blocker
+#
+function find_port_blocker() {
+  if ! [ $# -eq 1 ]; then
+    echo "Please define the port you want to check \n $ find_port_blocker 8000"
+    return 1
+  fi
+
+  lsof -i tcp:$1
+}
+
+# Create a git.io short URL
+gitio() {
+	if [ -z "${1}" ] || [ -z "${2}" ]; then
+		echo "Usage: \`gitio slug url\`"
+		return 1
+	fi
+	curl -i https://git.io/ -F "url=${2}" -F "code=${1}"
+}
+
+# Change MAC adress to get around public wifi limitations
+hack_the_space() {
+  NEW_MAC_ADDRESS=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
+  echo $NEW_MAC_ADDRESS
+  sudo ifconfig en0 ether "$NEW_MAC_ADDRESS"
+  echo "New MAC Address set"
+}
+
+# Create beautiful code images
+carbon() {
+  carbon-now <(pbpaste) -l /tmp/carbon
+  open /tmp/carbon/
+}
+
+# Load .env file
+loadEnv() {
+  set -o allexport; source .env; set +o allexport
+}
+
+# find shorthand
+function f() {
+  find . -name "$1"
+}
+
+# quickly look up a folder
+# grep-folder perf-*
+function grep-folder() {
+  ll | grep $1
+}
