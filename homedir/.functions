@@ -64,7 +64,7 @@ function find_port_blocker() {
 }
 
 # Create a git.io short URL
-gitio() {
+function gitio() {
 	if [ -z "${1}" ] || [ -z "${2}" ]; then
 		echo "Usage: \`gitio slug url\`"
 		return 1
@@ -73,7 +73,7 @@ gitio() {
 }
 
 # Change MAC adress to get around public wifi limitations
-hack_the_space() {
+function hack_the_space() {
   NEW_MAC_ADDRESS=$(openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//')
   echo $NEW_MAC_ADDRESS
   sudo ifconfig en0 ether "$NEW_MAC_ADDRESS"
@@ -81,13 +81,13 @@ hack_the_space() {
 }
 
 # Create beautiful code images
-carbon() {
+function carbon() {
   carbon-now <(pbpaste) -l /tmp/carbon
   open /tmp/carbon/
 }
 
 # Load .env file
-loadEnv() {
+function loadEnv() {
   set -o allexport; source .env; set +o allexport
 }
 
