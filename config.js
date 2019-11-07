@@ -55,22 +55,22 @@ module.exports = {
     'awscli'
   ],
   cask: [
-    'rightfont',
+    'alfred',
+    'spotify',
     'cakebrew',
     'diffmerge',
     'docker',
-    'kitematic',
     'google-chrome',
     'typora',
     'bartender',
-    'evernote',
+    'hammerspoon',
+    'karabiner-elements',
     'flux',
     'little-snitch',
     'macvim',
     'cyberduck',
     'forklift',
     'slack',
-    'torbrowser',
     'visual-studio-code',
     'vlc',
     'alfred',
@@ -79,9 +79,6 @@ module.exports = {
     'exa',
     'firefox',
     'iterm2',
-    'alfred',
-    'spotify',
-    'insomnia',
     'react-native-debugger',
     'altair-graphql-client',
     'keycastr',
@@ -98,13 +95,9 @@ module.exports = {
   ],
   mas: [
     '926036361', // LastPass
-    '585829637', // Todoist
     '1351639930', // Gifski
     '1082624744', // Gifox
     '1126100185', // Cashew
-    '485812721', // TweetDeck
-    '981765152', // SSH Shell
-    '1273243144', // Break
     '961632517', // Be Focused Pro
     '946399090', // Telegram Desktop
     '913158085', // Expressions
@@ -112,21 +105,18 @@ module.exports = {
     '509818877', // Type Fu
     '918858936', // Airmail
     '881415018', // myTuner Radio
-    '890031187', // Marked
     '507257563', // Sip
     '1289197285', // MindNode
     '497799835', // Xcode
     '973134470', // Be Focused
     '937984704', // Amphetamine
     '405399194', // Kindle
-    '409201541', // Pages
     '841285201', // Haskell
     '409203825', // Numbers
     '734418810', // SSH Tunnel18
     '425424353', // The Unarchiver
     '1006087419', // SnippetsLab
     '975937182', // Fantastical
-    '441258766', // Magnet
     '409183694', // Keynote
     '1451177988', // Carbonize
     '1268962404', // Smart JSON Editor
