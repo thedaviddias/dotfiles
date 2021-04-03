@@ -136,9 +136,6 @@ sudo chflags uchg /Private/var/vm/sleepimage;ok
 # Optional / Experimental                      #
 ################################################
 
-# running "Stop iTunes from responding to the keyboard media keys"
-launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null;ok
-
 #running "Add a spacer to the left side of the Dock (where the applications are)"
 defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}';ok
 #running "Add a spacer to the right side of the Dock (where the Trash is)"
@@ -207,9 +204,6 @@ sudo systemsetup -setrestartfreeze on;ok
 running "Never go into computer sleep mode"
 sudo systemsetup -setcomputersleep Off > /dev/null;ok
 
-# running "Check for software updates daily, not just once per week"
-# defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1;ok
-
 # running "Disable Notification Center and remove the menu bar icon"
 # launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist > /dev/null 2>&1;ok
 
@@ -273,9 +267,6 @@ running "Require password immediately after sleep or screen saver begins"
 defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0;ok
 
-# running "Save screenshots to the desktop"
-# defaults write com.apple.screencapture location -string "${HOME}/Desktop";ok
-
 running "Save screenshots in JPG format (other options: BMP, GIF, JPG, PDF, TIFF)"
 defaults write com.apple.screencapture type -string "jpg";ok
 
@@ -311,7 +302,6 @@ defaults write com.apple.finder ShowStatusBar -bool true;ok
 
 running "Show path bar"
 defaults write com.apple.finder ShowPathbar -bool true;ok
-
 
 running "Allow text selection in Quick Look"
 defaults write com.apple.finder QLEnableTextSelection -bool true;ok
@@ -370,7 +360,6 @@ defaults write com.apple.finder FXInfoPanesExpanded -dict \
 bot "Dock & Dashboard"
 ###############################################################################
 
-
 running "Enable highlight hover effect for the grid view of a stack (Dock)"
 defaults write com.apple.dock mouse-over-hilite-stack -bool true;ok
 
@@ -424,30 +413,6 @@ defaults write com.apple.dock hide-mirror -bool true;ok
 
 running "Reset Launchpad, but keep the desktop wallpaper intact"
 find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -delete;ok
-
-bot "Configuring Hot Corners"
-# Possible values:
-#  0: no-op
-#  2: Mission Control
-#  3: Show application windows
-#  4: Desktop
-#  5: Start screen saver
-#  6: Disable screen saver
-#  7: Dashboard
-# 10: Put display to sleep
-# 11: Launchpad
-# 12: Notification Center
-
-running "Top left screen corner → Mission Control"
-defaults write com.apple.dock wvous-tl-corner -int 2
-defaults write com.apple.dock wvous-tl-modifier -int 0;ok
-running "Top right screen corner → Desktop"
-defaults write com.apple.dock wvous-tr-corner -int 4
-defaults write com.apple.dock wvous-tr-modifier -int 0;ok
-running "Bottom right screen corner → Start screen saver"
-defaults write com.apple.dock wvous-br-corner -int 5
-defaults write com.apple.dock wvous-br-modifier -int 0;ok
-
 
 ###############################################################################
 bot "Spotlight"
@@ -582,24 +547,29 @@ defaults write com.apple.terminal FocusFollowsMouse -bool true
 
 running "Don’t display the annoying prompt when quitting iTerm"
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false;ok
+
 running "hide tab title bars"
 defaults write com.googlecode.iterm2 HideTab -bool true;ok
+
 running "set system-wide hotkey to show/hide iterm with ^\`"
 defaults write com.googlecode.iterm2 Hotkey -bool true;ok
+
 running "hide pane titles in split panes"
 defaults write com.googlecode.iterm2 ShowPaneTitles -bool false;ok
+
 running "animate split-terminal dimming"
 defaults write com.googlecode.iterm2 AnimateDimming -bool true;ok
 defaults write com.googlecode.iterm2 HotkeyChar -int 96;
 defaults write com.googlecode.iterm2 HotkeyCode -int 50;
 defaults write com.googlecode.iterm2 FocusFollowsMouse -int 1;
 defaults write com.googlecode.iterm2 HotkeyModifiers -int 262401;
+
 running "Make iTerm2 load new tabs in the same directory"
 /usr/libexec/PlistBuddy -c "set \"New Bookmarks\":0:\"Custom Directory\" Recycle" ~/Library/Preferences/com.googlecode.iterm2.plist
+
 running "setting fonts"
 defaults write com.googlecode.iterm2 "Normal Font" -string "Hack-Regular 12";
-defaults write com.googlecode.iterm2 "Non Ascii Font" -string "RobotoMonoForPowerline-Regular 12";
-ok
+defaults write com.googlecode.iterm2 "Non Ascii Font" -string "RobotoMonoForPowerline-Regular 12";ok
+
 running "reading iterm settings"
-defaults read -app iTerm > /dev/null 2>&1;
-ok
+defaults read -app iTerm > /dev/null 2>&1;ok
