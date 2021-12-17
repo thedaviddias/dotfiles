@@ -113,14 +113,15 @@ fi
 MD5_NEWWP=$(md5 img/wallpaper.jpg | awk '{print $4}')
 MD5_OLDWP=$(md5 /System/Library/CoreServices/DefaultDesktop.jpg | awk '{print $4}')
 if [[ "$MD5_NEWWP" != "$MD5_OLDWP" ]]; then
-  read -r -p "Do you want to use the project's custom desktop wallpaper? [Y|n] " response
-  if [[ $response =~ ^(no|n|N) ]];then
-    echo "skipping...";
-    ok
-  else
+  read -r -p "Do you want to use the project's custom desktop wallpaper? [y|N] " response
+  if [[ $response =~ (yes|y|Y) ]]; then
     running "Set a custom wallpaper image"
     # rm -rf ~/Library/Application Support/Dock/desktoppicture.db
     bot "I will backup system wallpapers in ~/.dotfiles/img/"
+    sudo cp /System/Library/CoreServices/DefaultDesktop.jpg img/DefaultDesktop.jpg > /dev/null 2>&1
+    sudo cp /Library/Desktop\ Pictures/El\ Capitan.jpg img/El\ Capitan.jpg > /dev/null 2>&1
+    sudo cp /Library/Desktop\ Pictures/Sierra.jpg img/Sierra.jpg > /dev/null 2>&1
+    sudo cp /Library/Desktop\ Pictures/Sierra\ 2.jpg img/Sierra\ 2.jpg > /dev/null 2>&1
     sudo rm -f /System/Library/CoreServices/DefaultDesktop.jpg > /dev/null 2>&1
     sudo rm -f /Library/Desktop\ Pictures/El\ Capitan.jpg > /dev/null 2>&1
     sudo rm -f /Library/Desktop\ Pictures/Sierra.jpg > /dev/null 2>&1
@@ -129,6 +130,8 @@ if [[ "$MD5_NEWWP" != "$MD5_OLDWP" ]]; then
     sudo cp ./img/wallpaper.jpg /Library/Desktop\ Pictures/Sierra.jpg;
     sudo cp ./img/wallpaper.jpg /Library/Desktop\ Pictures/Sierra\ 2.jpg;
     sudo cp ./img/wallpaper.jpg /Library/Desktop\ Pictures/El\ Capitan.jpg;ok
+  else
+    ok "skipped"
   fi
 fi
 
@@ -193,10 +196,6 @@ fi
 mkdir -p ~/Library/Caches/Homebrew/Formula
 brew doctor
 
-
-
-
-
 #####
 # install brew cask (UI Packages)
 #####
@@ -208,9 +207,6 @@ if [[ $? != 0 ]]; then
 fi
 brew tap caskroom/versions > /dev/null 2>&1
 ok
-
-
-
 
 # skip those GUI clients, git command-line all the way
 require_brew git
@@ -290,8 +286,6 @@ require_brew nvm
 # nvm
 require_nvm stable
 
-# always pin versions (no surprises, consistent dev/build machines)
-npm config set save-exact true
 
 #####################################
 # Now we can switch to node.js mode
@@ -313,6 +307,14 @@ brew cleanup --force > /dev/null 2>&1
 rm -f -r /Library/Caches/Homebrew/* > /dev/null 2>&1
 ok
 
+bot "OS Configuration"
+read -r -p "Do you want to update the system configurations? [y|N] " response
+if [[ -z $response || $response =~ ^(n|N) ]]; then
+  open /Applications/iTerm.app
+  bot "All done"
+  exit
+fi
+
 source ./mac/dock.sh
 
 ###############################################################################
@@ -325,5 +327,6 @@ for app in "Activity Monitor" "Address Book" "Calendar" "Contacts" "cfprefsd" \
   killall "${app}" > /dev/null 2>&1
 done
 
+brew update && brew upgrade && brew cleanup 
 
-bot "Woot! All done. Kill this terminal and launch iTerm"
+bot "Woot! All done"

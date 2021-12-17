@@ -34,7 +34,7 @@ function touchp() {
 
 ## output directory/file tree, excluding ignorables
 function tre(){
-  tree -aC -I '.git|node_modules|bower_components|.DS_Store' --dirsfirst "$@"
+  tree -aC -I '.git|node_modules|.DS_Store' --dirsfirst "$@"
 }
 
 #lists npm packages installed
