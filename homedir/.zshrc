@@ -10,6 +10,12 @@ export CASE_SENSITIVE="true"
 # disable autosetting terminal title.
 export DISABLE_AUTO_TITLE="true"
 
+# Uncomment the following line to automatically update without prompting.
+# export DISABLE_UPDATE_PROMPT="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
+
 # Which plugins would you like to load? (plugins can be found in ~/.dotfiles/oh-my-zsh/plugins/*)
 plugins=(git colored-man-pages colorize brew osx history copyfile jsontools dirhistory zsh-completions zsh-syntax-highlighting)
 

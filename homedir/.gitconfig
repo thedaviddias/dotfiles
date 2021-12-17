@@ -86,6 +86,7 @@
 [credential]
     # cache creds (git help credential-cache)
   helper = cache
+  helper = osxkeychain  # Use personal access token in macOS keychain for authentication over https
 
 [filter "tabspace"]
   clean = expand -t 4
@@ -97,6 +98,7 @@
 [pull]
 	ff = only
 	default = current
+  rebase = true  # Rebase local commits on top of remote commits when pulling, instead of merge
 
 [checkout]
 	defaultRemote = origin
