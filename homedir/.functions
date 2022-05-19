@@ -34,16 +34,7 @@ function touchp() {
 
 ## output directory/file tree, excluding ignorables
 function tre(){
-  tree -aC -I '.git|node_modules|bower_components|.DS_Store' --dirsfirst "$@"
-}
-
-# fo [FUZZY PATTERN] - Open the selected file with the default editor
-#   - Bypass fuzzy finder if there's only one match (--select-1)
-#   - Exit if there's no match (--exit-0)
-function fo() {
-  local files
-  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
-  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+  tree -aC -I '.git|node_modules|.DS_Store' --dirsfirst "$@"
 }
 
 #lists npm packages installed
@@ -100,4 +91,24 @@ function f() {
 # grep-folder perf-*
 function grep-folder() {
   ll | grep $1
+}
+
+function weather() {
+  curl wttr.in/$1
+}
+function ipinfo(){
+  curl ipinfo.io/$1
+}
+
+# fo [FUZZY PATTERN] - Open the selected file with the default editor
+#   - Bypass fuzzy finder if there's only one match (--select-1)
+#   - Exit if there's no match (--exit-0)
+function fo() {
+  local files
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+}
+
+function fixperms(){
+    find . \( -name "*.sh" -or -type d \) -exec chmod 755 {} \; && find . -type f ! -name "*.sh" -exec chmod 644 {} \;
 }

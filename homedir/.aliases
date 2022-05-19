@@ -1,8 +1,8 @@
 
 #!/usr/bin/env bash
 
-alias nodeClean='find . -name "node_modules" -type d -prune -exec rm -rf "{}" +'
 alias c='clear'
+alias nodeClean='find . -name "node_modules" -type d -prune -exec rm -rf "{}" +'
 
 # trash
 alias t=trash
@@ -16,10 +16,9 @@ alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
 # Directory shortcuts
-alias d="cd ~/Documents/Dropbox"
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
-alias p="cd ~/projects"
+alias p="cd ~/Projects"
 alias g="git"
 
 # Detect which `ls` flavor is in use

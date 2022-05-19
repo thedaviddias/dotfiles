@@ -1,155 +1,172 @@
 module.exports = {
   brew: [
-    'mas',
-    'rbenv',
-    'ruby-build',
-    // http://conqueringthecommandline.com/book/ack_ag
-    'ack',
-    'ag',
-    // alternative to `cat`: https://github.com/sharkdp/bat
-    'bat',
-    // Install GNU core utilities (those that come with macOS are outdated)
-    // Don’t forget to add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH`.
     'coreutils',
-    'dos2unix',
-    // Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed
-    'findutils',
-    // 'fortune',
-    'fzf',
-    'readline', // ensure gawk gets good readline
-    'gawk',
-    // http://www.lcdf.org/gifsicle/ (because I'm a gif junky)
-    'gifsicle',
-    'gnupg',
-    // Install GNU `sed`, overwriting the built-in `sed`
-    // so we can do "sed -i 's/foo/bar/' file" instead of "sed -i '' 's/foo/bar/' file"
-    'gnu-sed --with-default-names',
-    // upgrade grep so we can get things like inverted match (-v)
-    'grep --with-default-names',
-    // better, more recent grep
-    'homebrew/dupes/grep',
-    // https://github.com/jkbrzt/httpie
-    'httpie',
-    // jq is a sort of JSON grep
-    'jq',
-    // Bundler for non-Ruby dependencies from Homebrew.
-    'bundle',
-    // Mac App Store CLI: https://github.com/mas-cli/mas
-    'mas',
-    // Install some other useful utilities like `sponge`
     'moreutils',
+    'findutils',
+    'gnu-sed --with-default-names', // Install GNU `sed`, overwriting the built-in `sed` so we can do "sed -i 's/foo/bar/' file" instead of "sed -i '' 's/foo/bar/' file"
+    'gnupg',
+    'vim --with-override-system-vi', // better, more recent vim
+    'grep --with-default-names',     // upgrade grep so we can get things like inverted match (-v)
+    'openssh',
+    'git',
+    'git-lfs',
+    'ack', // http://conqueringthecommandline.com/book/ack_ag
+    'ag',
+    'awscli',
+    'bat', // alternative to `cat`: https://github.com/sharkdp/bat
+    'bundle', // Bundler for non-Ruby dependencies from Homebrew.
+    'dos2unix',
+    'findutils', // Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed
+    'fzf', // Command-line fuzzy finder
+    'gawk',
+    'gh',
+    'git-standup',
+    'goku',
+    'homebrew/dupes/grep',     // better, more recent grep
+    'homebrew/dupes/screen',     // better/more recent version of screen
+    'httpie', // https://github.com/jkbrzt/httpie
+    'jq', // jq is a sort of JSON grep
+    'mas', // Mac App Store CLI: https://github.com/mas-cli/mas
+    'mongodb',
+    'moreutils', // Install some other useful utilities like `sponge`
     'nmap',
     'openconnect',
+    'postgresql',
+    'python',
+    'python@2',
+    'python@3',
+    'rbenv',
+    'readline', // ensure gawk gets good readline
     'reattach-to-user-namespace',
-    // better/more recent version of screen
-    'homebrew/dupes/screen',
+    'ruby-build',
+    'poppler', // for "pdfunite" and "pdfseparate" tools
+    'sqlite',
     'todo-txt',
     'tree',
+    'tmux',
     'ttyrec',
-    // better, more recent vim
-    'vim --with-override-system-vi',
     'watch',
-    // Install wget with IRI support
-    'wget --enable-iri',
-    'tree',
-    'awscli'
+    'wget --enable-iri', // Install wget with IRI support
+    'yarn',
   ],
   cask: [
+    '1password-cli',
+    '1password',
+    'affinity-designer',
+    'affinity-photo',
+    'airmail',
     'alfred',
-    'spotify',
-    'cakebrew',
-    'diffmerge',
-    'docker',
-    'google-chrome',
-    'typora',
+    'altair-graphql-client',
+    'audio-hijack',
+    'autojump',
     'bartender',
-    'hammerspoon',
-    'karabiner-elements',
-    'flux',
-    'little-snitch',
-    'macvim',
-    'cyberduck',
+    'cakebrew',
+    'camo-studio',
+    'cleanmymac',
+    'cleanshot',
+    'contexts',
+    'devonthink',
+    'diffmerge',
+    'discord',
+    'docker',
+    'elgato-stream-deck',
+    'farrago',
+    'fig',
+    'figma',
+    'firefox',
     'forklift',
+    'google-chrome',
+    'gpg-suite',
+    'grammarly',
+    'hammerspoon',
+    'hazel',
+    'iterm2',
+    'karabiner-elements',
+    'keyboard-maestro',
+    'little-snitch',
+    'microsoft-edge',
+    'mindnode-pro',
+    'mockoon',
+    'monitorcontrol',
+    'ngrok',
+    'nordvpn',
+    'notion',
+    'obs',
+    'obsidian',
+    'postman',
+    'raindropio',
+    'rectangle',
+    'renamer',
+    'screenflow',
     'slack',
+    'steam',
+    'switchhosts',
+    'tableplus',
+    'teamviewer',
+    'the-unarchiver',
+    'things',
+    'tower',
+    'twitch',
+    'unity',
+    'virtualbox',
     'visual-studio-code',
     'vlc',
-    'alfred',
-    'tower',
-    'autojump',
-    'exa',
-    'firefox',
-    'iterm2',
-    'react-native-debugger',
-    'altair-graphql-client',
-    'keycastr',
-    'authy',
-    'google-photos-backup-and-sync',
-    'skype',
     'whatsapp',
-    'paw',
-    'ngrok',
-    'python',
-    'python3'
+    'zoom',
   ],
   gem: [
   ],
   mas: [
-    '926036361', // LastPass
-    '1351639930', // Gifski
-    '1082624744', // Gifox
     '1126100185', // Cashew
-    '961632517', // Be Focused Pro
     '946399090', // Telegram Desktop
     '913158085', // Expressions
-    '1024917449', // Cloud Outliner Pro
     '509818877', // Type Fu
-    '918858936', // Airmail
-    '881415018', // myTuner Radio
-    '507257563', // Sip
-    '1289197285', // MindNode
     '497799835', // Xcode
-    '973134470', // Be Focused
     '937984704', // Amphetamine
-    '405399194', // Kindle
-    '841285201', // Haskell
     '409203825', // Numbers
     '734418810', // SSH Tunnel18
-    '425424353', // The Unarchiver
     '1006087419', // SnippetsLab
     '975937182', // Fantastical
-    '409183694', // Keynote
     '1451177988', // Carbonize
     '1268962404', // Smart JSON Editor
+    '880001334', // Reeder
+    '1403919533', // MWeb
+    '409183694', // Keynote
   ],
   npm: [
-    'antic',
-    'alfred-dark-mode',
+    '@aws-amplify/cli',
     'Alfred fkill',
-    'select-branch',
-    'carbon-now-cli',
+    'alfred-dark-mode',
+    'antic',
     'buzzphrase',
-    'eslint',
-    'instant-markdown-d',
-    'npm-check-updates',
-    'prettyjson',
-    'trash',
-    'trash-cli',
-    'live-server',
-    'http-server',
-    'svgo',
+    'carbon-now-cli',
     'commitizen',
-    'wifi',
-    'wifi-password-cli',
-    'imagemin-cli',
-    'git-recall',
-    'fkill',
-    'vtop',
-    'firefox',
-    'graphql-playground',
-    'qlmarkdown',
-    'yo',
-    'express-generator@4',
+    'dotenv-cli',
     'expo-cli',
-    'prettier'
+    'express-generator@4',
+    'firefox',
+    'fkill',
+    'gatsby-cli',
+    'git-recall',
+    'graphql-playground',
+    'http-server',
+    'imagemin-cli',
+    'instant-markdown-d',
+    'lerna',
+    'live-server',
+    'netlify-cli',
+    'npm-check',
+    'plop',
+    'prettyjson',
+    'qlmarkdown',
+    'select-branch',
+    'svgo',
+    'trash-cli',
+    'trash',
+    'vercel',
+    'vtop',
+    'wifi-password-cli',
+    'wifi',
+    'yarn-check',
   ]
 };

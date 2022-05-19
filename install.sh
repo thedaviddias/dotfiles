@@ -33,6 +33,10 @@ if ! sudo grep -q "%wheel	 ALL=(ALL) NOPASSWD: ALL #atomantic/dotfiles" "/etc/su
   fi
 fi
 
+# ###########################################################
+# Git Config
+# ###########################################################
+bot "OK, now I am going to update the .gitconfig for your user info:"
 grep 'user = GITHUBUSER' ./homedir/.gitconfig > /dev/null 2>&1
 if [[ $? = 0 ]]; then
     read -r -p "What is your github.com username? " githubuser
@@ -103,18 +107,21 @@ if [[ $? = 0 ]]; then
   fi
 fi
 
+# ###########################################################
+# Wallpaper
+# ###########################################################
 MD5_NEWWP=$(md5 img/wallpaper.jpg | awk '{print $4}')
 MD5_OLDWP=$(md5 /System/Library/CoreServices/DefaultDesktop.jpg | awk '{print $4}')
 if [[ "$MD5_NEWWP" != "$MD5_OLDWP" ]]; then
-  read -r -p "Do you want to use the project's custom desktop wallpaper? [Y|n] " response
-  if [[ $response =~ ^(no|n|N) ]];then
-    echo "skipping...";
-    ok
-  else
+  read -r -p "Do you want to use the project's custom desktop wallpaper? [y|N] " response
+  if [[ $response =~ (yes|y|Y) ]]; then
     running "Set a custom wallpaper image"
-    # `DefaultDesktop.jpg` is already a symlink, and
-    # all wallpapers are in `/Library/Desktop Pictures/`. The default is `Wave.jpg`.
-    rm -rf ~/Library/Application Support/Dock/desktoppicture.db
+    # rm -rf ~/Library/Application Support/Dock/desktoppicture.db
+    bot "I will backup system wallpapers in ~/.dotfiles/img/"
+    sudo cp /System/Library/CoreServices/DefaultDesktop.jpg img/DefaultDesktop.jpg > /dev/null 2>&1
+    sudo cp /Library/Desktop\ Pictures/El\ Capitan.jpg img/El\ Capitan.jpg > /dev/null 2>&1
+    sudo cp /Library/Desktop\ Pictures/Sierra.jpg img/Sierra.jpg > /dev/null 2>&1
+    sudo cp /Library/Desktop\ Pictures/Sierra\ 2.jpg img/Sierra\ 2.jpg > /dev/null 2>&1
     sudo rm -f /System/Library/CoreServices/DefaultDesktop.jpg > /dev/null 2>&1
     sudo rm -f /Library/Desktop\ Pictures/El\ Capitan.jpg > /dev/null 2>&1
     sudo rm -f /Library/Desktop\ Pictures/Sierra.jpg > /dev/null 2>&1
@@ -123,35 +130,71 @@ if [[ "$MD5_NEWWP" != "$MD5_OLDWP" ]]; then
     sudo cp ./img/wallpaper.jpg /Library/Desktop\ Pictures/Sierra.jpg;
     sudo cp ./img/wallpaper.jpg /Library/Desktop\ Pictures/Sierra\ 2.jpg;
     sudo cp ./img/wallpaper.jpg /Library/Desktop\ Pictures/El\ Capitan.jpg;ok
+  else
+    ok "skipped"
   fi
 fi
 
+# ###########################################################
+# Install non-brew various tools (PRE-BREW Installs)
+# ###########################################################
+
+bot "ensuring build/install tools are available"
+if ! xcode-select --print-path &> /dev/null; then
+
+    # Prompt user to install the XCode Command Line Tools
+    xcode-select --install &> /dev/null
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # Wait until the XCode Command Line Tools are installed
+    until xcode-select --print-path &> /dev/null; do
+        sleep 5
+    done
+
+    print_result $? ' XCode Command Line Tools Installed'
+
+    # Prompt user to agree to the terms of the Xcode license
+    # https://github.com/alrra/dotfiles/issues/10
+
+    sudo xcodebuild -license
+    print_result $? 'Agree with the XCode Command Line Tools licence'
+
+fi
+
+# ###########################################################
+# install homebrew (CLI Packages)
+# ###########################################################
 running "checking homebrew install"
 brew_bin=$(which brew) 2>&1 > /dev/null
 if [[ $? != 0 ]]; then
   action "installing homebrew"
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    if [[ $? != 0 ]]; then
-      error "unable to install homebrew, script $0 abort!"
-      exit 2
+  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  if [[ $? != 0 ]]; then
+    error "unable to install homebrew, script $0 abort!"
+    exit 2
   fi
+  brew analytics off
 else
-  ok
   # Make sure we’re using the latest Homebrew
-  running "updating homebrew"
-  brew update
   ok
-  bot "before installing brew packages, we can upgrade any outdated packages."
-  read -r -p "run brew upgrade? [y|N] " response
-  if [[ $response =~ ^(y|yes|Y) ]];then
-      # Upgrade any already-installed formulae
-      action "upgrade brew packages..."
-      brew upgrade
-      ok "brews updated..."
+  bot "Homebrew"
+  read -r -p "run brew update && upgrade? [y|N] " response
+  if [[ $response =~ (y|yes|Y) ]]; then
+    action "updating homebrew..."
+    brew update
+    ok "homebrew updated"
+    action "upgrading brew packages..."
+    brew upgrade
+    ok "brews upgraded"
   else
-      ok "skipped brew package upgrades.";
+    ok "skipped brew package upgrades."
   fi
 fi
+
+# Just to avoid a potential bug
+mkdir -p ~/Library/Caches/Homebrew/Formula
+brew doctor
 
 #####
 # install brew cask (UI Packages)
@@ -167,10 +210,12 @@ ok
 
 # skip those GUI clients, git command-line all the way
 require_brew git
-# need fontconfig to install/build fonts
-require_brew fontconfig
 # update zsh to latest
 require_brew zsh
+# update ruby to latest
+# use versions of packages installed with homebrew
+RUBY_CONFIGURE_OPTS="--with-openssl-dir=`brew --prefix openssl` --with-readline-dir=`brew --prefix readline` --with-libyaml-dir=`brew --prefix libyaml`"
+require_brew ruby
 
 # set zsh as the user login shell
 CURRENTSHELL=$(dscl . -read /Users/$USER UserShell | awk '{print $2}')
@@ -182,34 +227,58 @@ if [[ "$CURRENTSHELL" != "/usr/local/bin/zsh" ]]; then
   ok
 fi
 
-if [[ ! -d "./oh-my-zsh/custom/themes/powerlevel9k" ]]; then
-  git clone https://github.com/bhilburn/powerlevel9k.git oh-my-zsh/custom/themes/powerlevel9k
+if [[ ! -d "./oh-my-zsh/custom/themes/powerlevel10k" ]]; then
+  git clone https://github.com/romkatv/powerlevel10k.git oh-my-zsh/custom/themes/powerlevel10k
 fi
 
-bot "creating symlinks for project dotfiles..."
-pushd homedir > /dev/null 2>&1
-now=$(date +"%Y.%m.%d.%H.%M.%S")
+bot "Dotfiles Setup"
+read -r -p "symlink ./homedir/* files in ~/ (these are the dotfiles)? [y|N] " response
+if [[ $response =~ (y|yes|Y) ]]; then
+  bot "creating symlinks for project dotfiles..."
+  pushd homedir > /dev/null 2>&1
+  now=$(date +"%Y.%m.%d.%H.%M.%S")
 
-for file in .*; do
-  if [[ $file == "." || $file == ".." ]]; then
-    continue
-  fi
-  running "~/$file"
-  # if the file exists:
-  if [[ -e ~/$file ]]; then
-      mkdir -p ~/.dotfiles_backup/$now
-      mv ~/$file ~/.dotfiles_backup/$now/$file
-      echo "backup saved as ~/.dotfiles_backup/$now/$file"
-  fi
-  # symlink might still exist
-  unlink ~/$file > /dev/null 2>&1
-  # create the link
-  ln -s ~/.dotfiles/homedir/$file ~/$file
-  echo -en '\tlinked';ok
-done
+  for file in .*; do
+    if [[ $file == "." || $file == ".." ]]; then
+      continue
+    fi
+    running "~/$file"
+    # if the file exists:
+    if [[ -e ~/$file ]]; then
+        mkdir -p ~/.dotfiles_backup/$now
+        mv ~/$file ~/.dotfiles_backup/$now/$file
+        echo "backup saved as ~/.dotfiles_backup/$now/$file"
+    fi
+    # symlink might still exist
+    unlink ~/$file > /dev/null 2>&1
+    # create the link
+    ln -s ~/.dotfiles/homedir/$file ~/$file
+    echo -en '\tlinked';ok
+  done
 
-popd > /dev/null 2>&1
+  popd > /dev/null 2>&1
+fi
 
+
+read -r -p "Install fonts? [y|N] " response
+if [[ $response =~ (y|yes|Y) ]];then
+  bot "installing fonts"
+  # need fontconfig to install/build fonts
+  require_brew fontconfig
+  ./fonts/install.sh
+  brew tap homebrew/cask-fonts
+  require_brew svn #required for roboto
+  require_cask font-fontawesome
+  require_cask font-awesome-terminal-fonts
+  require_cask font-hack
+  require_cask font-inconsolata-dz-for-powerline
+  require_cask font-inconsolata-g-for-powerline
+  require_cask font-inconsolata-for-powerline
+  require_cask font-roboto-mono
+  require_cask font-roboto-mono-for-powerline
+  require_cask font-source-code-pro
+  ok
+fi
 
 # node version manager
 require_brew nvm
@@ -217,8 +286,6 @@ require_brew nvm
 # nvm
 require_nvm stable
 
-# always pin versions (no surprises, consistent dev/build machines)
-npm config set save-exact true
 
 #####################################
 # Now we can switch to node.js mode
@@ -236,10 +303,19 @@ node index.js
 ok
 
 running "cleanup homebrew"
-brew cleanup > /dev/null 2>&1
+brew cleanup --force > /dev/null 2>&1
+rm -f -r /Library/Caches/Homebrew/* > /dev/null 2>&1
 ok
 
-# source ./mac/dock.sh
+bot "OS Configuration"
+read -r -p "Do you want to update the system configurations? [y|N] " response
+if [[ -z $response || $response =~ ^(n|N) ]]; then
+  open /Applications/iTerm.app
+  bot "All done"
+  exit
+fi
+
+source ./mac/dock.sh
 
 ###############################################################################
 # Kill affected applications                                                  #
@@ -251,5 +327,6 @@ for app in "Activity Monitor" "Address Book" "Calendar" "Contacts" "cfprefsd" \
   killall "${app}" > /dev/null 2>&1
 done
 
+brew update && brew upgrade && brew cleanup 
 
-bot "Woot! All done. Kill this terminal and launch iTerm"
+bot "Woot! All done"
